@@ -116,18 +116,18 @@ jobs:
             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
 
   
-  # semgrep:
-  #   runs-on: ubuntu-latest
-  #   needs: sonar-scan
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - name: Install Semgrep
-  #       run: |
-  #         sudo snap install semgrep --classic
-  #     - name: Run Semgrep
-  #       uses: returntocorp/semgrep-action@v1
-  #       with:
-  #         config: auto
+  semgrep:
+    runs-on: ubuntu-latest
+    needs: sonar-scan
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Semgrep
+        run: |
+          sudo snap install semgrep --classic
+      - name: Run Semgrep
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: auto
 
   # dependency-check:
   #   runs-on: ubuntu-latest
