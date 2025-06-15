@@ -35,19 +35,32 @@ jobs:
         with:
           output: results.sarif
 
-      - name: Install sarif-to-html
-        run: |
-          npm install -g sarif-to-html
+      # - name: Install sarif-to-html
+      #   run: |
+      #     npm install -g sarif-to-html
+
+
+
 
       - name: Convert SARIF to HTML
         run: |
-          sarif-to-html results.sarif > codeql-report.html
+          npx github:danielyst/sarif-to-html results.sarif > codeql-report.html
 
       - name: Upload HTML Report
         uses: actions/upload-artifact@v4
         with:
           name: codeql-html-report
           path: codeql-report.html
+
+      # - name: Convert SARIF to HTML
+      #   run: |
+      #     sarif-to-html results.sarif > codeql-report.html
+
+      # - name: Upload HTML Report
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: codeql-html-report
+      #     path: codeql-report.html
 
 
 
