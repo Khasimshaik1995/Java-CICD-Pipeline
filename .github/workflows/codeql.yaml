@@ -42,9 +42,13 @@ jobs:
 
 
 
-      - name: Convert SARIF to HTML
+      - name: Clone sarif-to-html and convert SARIF to HTML
         run: |
-          npx github:danielyst/sarif-to-html results.sarif > codeql-report.html
+          git clone https://github.com/danielyst/sarif-to-html.git
+          cd sarif-to-html
+          npm install
+          node index.js ../results.sarif > ../codeql-report.html
+
 
       - name: Upload HTML Report
         uses: actions/upload-artifact@v4
