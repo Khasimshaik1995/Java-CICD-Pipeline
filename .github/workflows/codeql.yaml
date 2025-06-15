@@ -1,4 +1,4 @@
-name: "CodeQL Analysis - Java with Maven and HTML Report"
+name: "CodeQL Analysis - Java with HTML Report"
 
 on:
   push:
@@ -35,26 +35,19 @@ jobs:
         with:
           output: results.sarif
 
-      - name: Install Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-
-      - name: Install sarif-web-viewer
+      - name: Install sarif-to-html
         run: |
-          npm install -g @microsoft/sarif-web-viewer-cli
+          npm install -g sarif-to-html
 
       - name: Convert SARIF to HTML
         run: |
-          mkdir sarif-html
-          sarif-web-viewer-cli --input-file results.sarif --output-directory sarif-html
+          sarif-to-html results.sarif > codeql-report.html
 
       - name: Upload HTML Report
         uses: actions/upload-artifact@v4
         with:
           name: codeql-html-report
-          path: sarif-html
-
+          path: codeql-report.html
 
 
 
