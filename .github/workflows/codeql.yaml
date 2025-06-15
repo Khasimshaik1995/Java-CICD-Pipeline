@@ -1,4 +1,4 @@
-name: "CodeQL Analysis - Java with Maven"
+name: "CodeQL Analysis - Java with Maven and HTML Report"
 
 on:
   push:
@@ -6,11 +6,11 @@ on:
   pull_request:
     branches: [ main ]
   schedule:
-    - cron: '0 0 * * 0'  # Optional: runs every Sunday
+    - cron: '0 0 * * 0'
 
 jobs:
   analyze:
-    name: Analyze Java code with CodeQL
+    name: CodeQL + HTML Report
     runs-on: ubuntu-latest
 
     permissions:
@@ -27,7 +27,7 @@ jobs:
         with:
           languages: java
 
-      - name: Build using Maven
+      - name: Build with Maven
         run: mvn clean install -DskipTests
 
       - name: Perform CodeQL Analysis
@@ -35,8 +35,78 @@ jobs:
         with:
           output: results.sarif
 
-      - name: Upload CodeQL Results as Artifact
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install sarif-web-viewer
+        run: |
+          npm install -g @microsoft/sarif-web-viewer-cli
+
+      - name: Convert SARIF to HTML
+        run: |
+          mkdir sarif-html
+          sarif-web-viewer-cli --input-file results.sarif --output-directory sarif-html
+
+      - name: Upload HTML Report
         uses: actions/upload-artifact@v4
         with:
-          name: codeql-results
-          path: results.sarif
+          name: codeql-html-report
+          path: sarif-html
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# name: "CodeQL Analysis - Java with Maven"
+
+# on:
+#   push:
+#     branches: [ main ]
+#   pull_request:
+#     branches: [ main ]
+#   schedule:
+#     - cron: '0 0 * * 0'  # Optional: runs every Sunday
+
+# jobs:
+#   analyze:
+#     name: Analyze Java code with CodeQL
+#     runs-on: ubuntu-latest
+
+#     permissions:
+#       actions: read
+#       contents: read
+#       security-events: write
+
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v4
+
+#       - name: Initialize CodeQL
+#         uses: github/codeql-action/init@v3
+#         with:
+#           languages: java
+
+#       - name: Build using Maven
+#         run: mvn clean install -DskipTests
+
+#       - name: Perform CodeQL Analysis
+#         uses: github/codeql-action/analyze@v3
+#         with:
+#           output: results.sarif
+
+#       - name: Upload CodeQL Results as Artifact
+#         uses: actions/upload-artifact@v4
+#         with:
+#           name: codeql-results
+#           path: results.sarif
