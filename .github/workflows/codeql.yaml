@@ -1,0 +1,42 @@
+name: "CodeQL Analysis - Java with Maven"
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '0 0 * * 0'  # Optional: runs every Sunday
+
+jobs:
+  analyze:
+    name: Analyze Java code with CodeQL
+    runs-on: ubuntu-latest
+
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: java
+
+      - name: Build using Maven
+        run: mvn clean install -DskipTests
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          output: results.sarif
+
+      - name: Upload CodeQL Results as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: codeql-results
+          path: results.sarif
