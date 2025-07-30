@@ -109,12 +109,11 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          mvn -B verify sonar:sonar \
-            -Dsonar.projectKey=<YOUR_PROJECT_KEY> \
-            -Dsonar.organization=<YOUR_ORG_NAME> \
-            -Dsonar.host.url=https://sonarcloud.io \
+          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
             -Dsonar.login=$SONAR_TOKEN \
-            -Dsonar.coverage.jacoco.xmlReportPaths=jacoco-report/jacoco.xml
+            -Dsonar.sources=src/main/java \
+            -Dsonar.tests=src/test/java \
+            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
 
   
   semgrep:
